@@ -1,0 +1,6 @@
+[manage]
+dir = .
+[submit]
+input = ttjets
+[caches]
+$CMSSW_BASE/test = 1
