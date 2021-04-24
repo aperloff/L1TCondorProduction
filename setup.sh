@@ -177,6 +177,8 @@ declare -A LINKMAP=( [scripts/lnbatch.sh]="test/" [scripts/validation.C]="test/"
 for KEY in "${!LINKMAP[@]}"; do
 	if [[ "${KEY}" == *"CACHEDIR.TAG"* ]]; then
 		cp ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
+	elif [[ -d "${SOURCE_BASE}/${KEY}" ]]; then
+		cp -r ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
 	else
 		ln -s ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
 	fi
