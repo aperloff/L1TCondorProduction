@@ -171,7 +171,7 @@ SOURCE_BASE="${CMSSW_BASE}/src/Condor/L1Trigger/"
 DEST_BASE="${CMSSW_BASE}/src/L1Trigger/VertexFinder/"
 mkdir ${DEST_BASE}/test/condorSub/
 declare -A LINKMAP=( [scripts/lnbatch.sh]="test/" [scripts/validation.C]="test/" [scripts/haddEOS.sh]="test/condorSub/" [scripts/step2.sh]="test/condorSub/" \
-					 [data/.prodconfig]="test/condorSub/" [data/CACHEDIR.TAG]="test/condorSub/" \
+					 [data/.prodconfig]="test/condorSub/" [data/CACHEDIR.TAG]="test/condorSub/" [data/.gitignore]="test/" \
 					 [python/dict_ttjets.py]="test/condorSub/" [python/findHadds.py]="test/condorSub/" [python/jobSubmitterL1T.py]="test/condorSub/" \
 					 [python/submitJobs.py]="test/condorSub/" [python/Phase2HLTTDRSummer20ReRECOMiniAOD]="python/Phase2HLTTDRSummer20ReRECOMiniAOD" )
 for KEY in "${!LINKMAP[@]}"; do
