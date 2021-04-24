@@ -5,7 +5,7 @@ structuredOutput() {
 	RES=""
 	TMP=${1/.//}
 	IFS='_' read -r -a array <<< "$TMP"
-	cut=$(expr ${#array[@]} - 2)
+	cut=$(expr ${#array[@]} - 1)
 	for index in "${!array[@]}"; do
 		if [[ $index -lt $cut ]]; then
 			if [[ $index -eq 0 ]]; then
