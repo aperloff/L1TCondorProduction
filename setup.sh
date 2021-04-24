@@ -141,7 +141,7 @@ git config gc.auto 0
 if [[ -n "$BATCH" ]]; then
 	if [[ "${DEBUG}" == "true" ]]; then
 		echo "Dumping the git configuration before adding to it"
-		git config --global -l
+		git --no-pager config --global -l
 	fi
 	git config --global --add user.name "L1T GitHub"
 	git config --global --add user.email "L1T@github.com"
@@ -149,12 +149,12 @@ if [[ -n "$BATCH" ]]; then
 fi
 if [[ "${DEBUG}" == "true" ]]; then
 	echo "Dumping the git configuration"
-	git config --global -l
+	git --no-pager config --global -l
 fi
 
 # CMSSW patches
 if [[ "$CMSSWVER" == "CMSSW_11_1_"* ]]; then
-	git-cms-checkout-topic -u ACCESS_CMSSW cms-l1t-offline:${BRANCH}
+	git-cms-checkout-topic -u ${ACCESS_CMSSW} cms-l1t-offline:${BRANCH}
 	git-cms-addpkg L1Trigger/TrackTrigger
 	git-cms-addpkg SimTracker/TrackTriggerAssociation
 fi
@@ -167,15 +167,19 @@ git clone ${ACCESS_GITHUB}${FORK}/L1TCondorProduction.git -b ${BRANCH} Condor/L1
 scram b -j ${CORES}
 
 # link L1TCondorProduction files
-SOURCE_BASE="${CMSSW_BASE/src/Condor/L1Trigger/}"
+SOURCE_BASE="${CMSSW_BASE}/src/Condor/L1Trigger/"
 DEST_BASE="${CMSSW_BASE}/src/L1Trigger/VertexFinder/"
 mkdir ${DEST_BASE}/test/condorSub/
-declare -A LINKMAP=( [scripts/lnbatch.sh]="test/" [scripts/validation.C]="test/" [scripts/haddEOS.sh]="test/condorSub/" [scripts/step2.sh]="test/condorSub" \
-                     [data/.prodconfig]="test/condorSub/" [data/CACHEDIR.TAG]="test/condorSub/" \
-                     [python/dict_ttjets.py]="test/condorSub" [python/findHadds.py]="test/condorSub" [python/jobSubmitterL1T.py]="test/condorSub" \
-                     [python/submitJobs.py]="test/condorSub" [python/Phase2HLTTDRSummer20ReRECOMiniAOD/]="python/Phase2HLTTDRSummer20ReRECOMiniAOD/" )
+declare -A LINKMAP=( [scripts/lnbatch.sh]="test/" [scripts/validation.C]="test/" [scripts/haddEOS.sh]="test/condorSub/" [scripts/step2.sh]="test/condorSub/" \
+					 [data/.prodconfig]="test/condorSub/" [data/CACHEDIR.TAG]="test/condorSub/" \
+					 [python/dict_ttjets.py]="test/condorSub/" [python/findHadds.py]="test/condorSub/" [python/jobSubmitterL1T.py]="test/condorSub/" \
+					 [python/submitJobs.py]="test/condorSub/" [python/Phase2HLTTDRSummer20ReRECOMiniAOD]="python/Phase2HLTTDRSummer20ReRECOMiniAOD" )
 for KEY in "${!LINKMAP[@]}"; do
-	ln -s ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
+	if [[ "${KEY}" == *"CACHEDIR.TAG"* ]]; then
+		cp ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
+	else
+		ln -s ${SOURCE_BASE}/${KEY} ${DEST_BASE}/${LINKMAP[${KEY}]}
+	fi
 done
 
 # link CondorProduction files
